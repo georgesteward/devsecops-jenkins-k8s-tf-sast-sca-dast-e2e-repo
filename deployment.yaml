@@ -20,6 +20,23 @@ spec:
         - containerPort: 8080
 # service type loadbalancer       
 ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: asgbuggy
+#     k8s-app: asgbuggy
+#   name: asgbuggy
+# spec:
+#   ports:
+#   - name: http
+#     port: 80
+#     protocol: TCP
+#     targetPort: 8080
+#   type: LoadBalancer
+#   selector:
+#     app: asgbuggy
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -27,12 +44,14 @@ metadata:
     app: asgbuggy
     k8s-app: asgbuggy
   name: asgbuggy
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 spec:
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 8080
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
   type: LoadBalancer
   selector:
     app: asgbuggy
