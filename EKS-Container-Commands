@@ -1,0 +1,53 @@
+#EKS Commands
+
+#Create EKS CLuster - see below for creating with a yaml file
+#eksctl create cluster --name kubernetes-cluster --version 1.32 --region us-east-1 --nodegroup-name linux-nodes --node-type t2.xlarge --nodes 2 --vpc-private-subnets <subnet-1>,<subnet-2> -N 1 -m 1 -M 2 -P # -N node count, -m minimum node count, -M max node count, -P private networking for nodegroup
+#eksctl create nodegroup --cluster kubernetes-cluster --region us-east-1 --name linux-nodes --node-type t2.xlarge  -N 1 -m 1 -M 2 -P # -N node count, -m minimum node count, -M max node count, -P private networking for nodegroup
+
+#To Delete EKS cluster
+eksctl delete cluster --region=us-east-1 --name=kubernetes-cluster
+
+#To get context information of kubernetes cluster
+cat /home/ec2-user/.kube/config 
+
+#To create namespace in kubernetes cluster
+kubectl create namespace test
+
+#To get deployments in a namespace in kubernetes cluster
+kubectl get deployments --namespace=test 
+
+#To get services in a namespace in kubernetes cluster
+kubectl get svc --namespace=test 
+
+#To delete everything in a namespace in kubernetes cluster
+kubectl delete all --all -n test 
+
+#To delete unused docker images to cleanup memeory on system 
+docker system prune  
+
+#To delete a docker image
+docker image rm imagename  
+
+#eksctl create cluster -f ekscluster-create.yaml
+#YAML File to create the eks cluster. Note because there is a SCP requiring volume encryption you must create the cluster/ng via a config file (yaml).
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: kubernetes-cluster1
+  region: us-east-1
+
+vpc:
+  subnets:
+    private:
+      us-east-1a: { id: subnet-082cc7e46b22613e1 }
+      us-east-1b: { id: subnet-03d691ef37ee8dfd5 }
+
+nodeGroups:
+  - name: linux-ng
+    labels: { role: workers }
+    instanceType: t2.xlarge
+    volumeEncrypted: true
+    volumeSize: 80
+    desiredCapacity: 1
+    privateNetworking: true
