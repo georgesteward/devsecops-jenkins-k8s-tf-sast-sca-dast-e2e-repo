@@ -34,14 +34,14 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: kubernetes-cluster1
+  name: kubernetes-cluster
   region: us-east-1
 
 vpc:
   subnets:
     private:
-      us-east-1a: { id: subnet-082cc7e46b22613e1 }
-      us-east-1b: { id: subnet-03d691ef37ee8dfd5 }
+      us-east-1a: { id: subnet-05cbd0deadf955fc7 }
+      us-east-1b: { id: subnet-0b49c7cb305bc17d6 }
 
 nodeGroups:
   - name: linux-ng
